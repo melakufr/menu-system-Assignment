@@ -23,34 +23,42 @@ export class MenusService {
       });
     } catch (error) {
       this.logger.error(`Failed to process create item.`, error.stack);
+    } finally {
+      this.prismaService.$disconnect();
     }
     return await this.getMenuTree();
   }
 
   async getMenuTree(): Promise<MenuItemDto> {
-    const menus = await this.prismaService.menuItem.findMany();
+    try {
+      const menus = await this.prismaService.menuItem.findMany();
 
-    // Convert flat array into a hierarchical tree
-    const buildTree = (
-      items: MenuItemDto[],
-      parentId: string | null = null,
-    ): MenuItemDto[] => {
-      return items
-        .filter((item) => item.parentId === parentId)
-        .map((item) => ({
-          id: item.id,
-          name: item.name,
-          isExpanded: item.isExpanded ?? false,
-          children: buildTree(items, item.id), // Recursively build children
-        }));
-    };
+      // Convert flat array into a hierarchical tree
+      const buildTree = (
+        items: MenuItemDto[],
+        parentId: string | null = null,
+      ): MenuItemDto[] => {
+        return items
+          .filter((item) => item.parentId === parentId)
+          .map((item) => ({
+            id: item.id,
+            name: item.name,
+            isExpanded: item.isExpanded ?? false,
+            children: buildTree(items, item.id), // Recursively build children
+          }));
+      };
 
-    return {
-      id: 'root',
-      name: 'system management',
-      isExpanded: true,
-      children: buildTree(menus),
-    };
+      return {
+        id: 'root',
+        name: 'system management',
+        isExpanded: true,
+        children: buildTree(menus),
+      };
+    } catch (error) {
+      this.logger.error(`Failed to process create item.`, error.stack);
+    } finally {
+      this.prismaService.$disconnect();
+    }
   }
 
   findOne(id: number) {
