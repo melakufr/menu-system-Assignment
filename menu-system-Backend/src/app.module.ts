@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
-import { MenusModule } from './menus/menus.module';
+import { MenusModule } from '@app/menus/menus.module';
 
 @Module({
   imports: [

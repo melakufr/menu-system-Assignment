@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Logger } from '@nestjs/common';
 import { MenusService } from '@app/menus/menus.service';
 import { CreateMenuDto } from '@app/menus/dto/create-menu.dto';
-import { MenuItemDto } from '@app/menus/dto/Menu-item.dto';
+import { MenuItemDto } from '@app/menus/dto/menu-item.dto';
 
 @Controller('menus')
 export class MenusController {

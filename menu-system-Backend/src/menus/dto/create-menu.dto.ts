@@ -1,5 +1,5 @@
 import { IsString, ValidateNested } from 'class-validator';
-import { MenuItemDto } from './Menu-item.dto';
+import { MenuItemDto } from '@app/menus/dto/menu-item.dto';
 import { Type } from 'class-transformer';
 
 export class CreateMenuDto {
