@@ -18,5 +18,7 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
-  }
+  },
+  "include": ["src/**/*.ts"], // Ensure TypeScript compiles all files in src
+  "exclude": ["node_modules", "dist"]
 }
