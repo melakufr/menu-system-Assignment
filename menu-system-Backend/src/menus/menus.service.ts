@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateMenuDto } from '@app/menus/dto/create-menu.dto';
+import { PrismaService } from '@app/prisma/prisma.service';
 import { MenuItemDto, NewMenuItemDto } from '@app/menus/dto/menu-item.dto';
 
 @Injectable()
