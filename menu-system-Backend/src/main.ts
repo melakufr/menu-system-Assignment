@@ -2,7 +2,7 @@ if (!process.env.IS_TS_NODE) {//require only in dev mode
   require('module-alias/register');
 }
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '@app/app.module';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'nestjs-pino';
 
