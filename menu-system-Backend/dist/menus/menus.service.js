@@ -33,26 +33,37 @@ let MenusService = MenusService_1 = class MenusService {
         catch (error) {
             this.logger.error(`Failed to process create item.`, error.stack);
         }
+        finally {
+            this.prismaService.$disconnect();
+        }
         return await this.getMenuTree();
     }
     async getMenuTree() {
-        const menus = await this.prismaService.menuItem.findMany();
-        const buildTree = (items, parentId = null) => {
-            return items
-                .filter((item) => item.parentId === parentId)
-                .map((item) => ({
-                id: item.id,
-                name: item.name,
-                isExpanded: item.isExpanded ?? false,
-                children: buildTree(items, item.id),
-            }));
-        };
-        return {
-            id: 'root',
-            name: 'system management',
-            isExpanded: true,
-            children: buildTree(menus),
-        };
+        try {
+            const menus = await this.prismaService.menuItem.findMany();
+            const buildTree = (items, parentId = null) => {
+                return items
+                    .filter((item) => item.parentId === parentId)
+                    .map((item) => ({
+                    id: item.id,
+                    name: item.name,
+                    isExpanded: item.isExpanded ?? false,
+                    children: buildTree(items, item.id),
+                }));
+            };
+            return {
+                id: 'root',
+                name: 'system management',
+                isExpanded: true,
+                children: buildTree(menus),
+            };
+        }
+        catch (error) {
+            this.logger.error(`Failed to process create item.`, error.stack);
+        }
+        finally {
+            this.prismaService.$disconnect();
+        }
     }
     findOne(id) {
         return `This action returns a #${id} menu`;
