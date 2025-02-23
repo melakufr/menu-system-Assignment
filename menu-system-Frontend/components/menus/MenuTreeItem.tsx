@@ -1,24 +1,12 @@
-"use client";
+// "use client";
 
 import { useState } from "react";
 import {
   ChevronDown,
   ChevronRight,
-  Delete,
-  MoreVertical,
-  Pencil,
   Plus,
-  Trash2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-
 import { useMenuStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
 import { MenuItem } from "@/types/menu";
@@ -27,12 +15,10 @@ export default function MenuTreeItem({
   item,
   depth = 0,
   isLastChild = false,
-  onNavigate,
 }: {
   item: MenuItem;
   depth?: number;
   isLastChild?: boolean;
-  onNavigate: (item: MenuItem) => void;
 }) {
 
   const [isHovered, setIsHovered] = useState(false);
@@ -124,7 +110,7 @@ export default function MenuTreeItem({
               </Button>
 
                   
-              {/* edit */}
+              {/* edit
               <Button
                 size="icon"
                 variant="ghost"
@@ -136,9 +122,9 @@ export default function MenuTreeItem({
                 className="h-5 w-5 rounded-full p-0 text-green-700"
               >
                 <Pencil className="h-3 w-3" />
-              </Button>
+              </Button> */}
 
-                 {/* delete */}
+                 {/* delete
               <Button
                 size="icon"
                 variant="ghost"
@@ -146,7 +132,7 @@ export default function MenuTreeItem({
                 className="h-5 w-5 rounded-full  p-0 text-red-600"
               >
                 <Trash2 className="h-3 w-3" />
-              </Button>
+              </Button> */}
               </>              
             )}
           </div>
@@ -161,7 +147,6 @@ export default function MenuTreeItem({
             item={child}
             depth={depth + 1}
             isLastChild={index === item.children!.length - 1}
-            onNavigate={onNavigate}
           />
         ))}
     </div>

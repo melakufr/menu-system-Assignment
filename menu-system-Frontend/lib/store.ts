@@ -20,10 +20,12 @@ interface MenuState {
   selectedItem: string | null;
   isLoading: boolean;
   error: string | null;
+  isExpanded:boolean;
 
   // Actions
   initializeMenu: () => Promise<void>;
   toggleExpansion: (id: string) => void;
+  setIsExpanded:(isExpanded:boolean)=>void;
   expandAll: () => void;
   collapseAll: () => void;
   setSelectedItem: (id: string | null) => void;
@@ -61,16 +63,27 @@ function toggleExpansionHelper(
   return newItem;
 }
 
-function findItemById(items: MenuItem[], id: string): MenuItem | null {
-  for (const item of items) {
-    if (item.id === id) return item;
-    if (item.children) {
-      const found = findItemById(item.children, id);
-      if (found) return found;
+export const findItemById = (menuData: any, id: string): any => {
+  if (menuData.id === id) return menuData
+  if (menuData.children) {
+    for (const child of menuData.children) {
+      const found = findItemById(child, id)
+      if (found) return found
     }
   }
-  return null;
+  return null
 }
+export function findParentItem(items: MenuItem|null, targetId: string): MenuItem | null {
+  if (items?.children) {
+    for (const child of items.children) {
+      if (child.id === targetId) return items
+      const found = findParentItem(child, targetId)
+      if (found) return found
+    }
+  }
+  return null
+}
+
 
 function addNewItemHelper(
   items: MenuItem,//menu data
@@ -78,7 +91,6 @@ function addNewItemHelper(
   newItem: MenuItem
 ): MenuItem {
   const newItems = { ...items };
-console.log(`newItem=> `,newItem);
   if (items.id === parentId) {
     newItems.children = [...(items.children || []), newItem];
     return newItems;
@@ -153,6 +165,7 @@ export const useMenuStore = create<MenuState>((set, get) => ({
   selectedItem: null,
   isLoading: false,
   error: null,
+  isExpanded:true,
 
   initializeMenu: async () => {
     set({ isLoading: true, error: null });
@@ -166,6 +179,7 @@ export const useMenuStore = create<MenuState>((set, get) => ({
       set({ isLoading: false });
     }
   },
+  
 
   toggleExpansion: (id: string) => {
     const { menuData } = get();
@@ -194,6 +208,7 @@ export const useMenuStore = create<MenuState>((set, get) => ({
     // updateMenuData(newData);//update param data
   },
 
+  setIsExpanded:(isExpande:boolean) => set({isExpanded:isExpande}),
   setSelectedItem: (id: string | null) => set({ selectedItem: id }),
   setSelectedParentId: (id: string | null) => set({ selectedParentId: id }),
   setIsAddingItem: (isAdding: boolean) => set({ isAddingItem: isAdding }),

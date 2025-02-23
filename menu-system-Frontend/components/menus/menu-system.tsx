@@ -1,54 +1,50 @@
-"use client";
+"use client"
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Grid } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Combobox } from "@/components/menus/menu-combobox";
-// import { generateSlug } from "@/lib/menu-utils";
-import { useMenuStore } from "@/lib/store";
-import { AddDialog, DeleteDialog, EditDialog } from "./dialogs";
-import MenuTreeItem from "./MenuTreeItem";
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
+import { Grid } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Combobox } from "@/components/menus/menu-combobox"
+import { useMenuStore } from "@/lib/store"
+import { AddDialog, DeleteDialog, EditDialog } from "./dialogs"
+import MenuTreeItem from "./MenuTreeItem"
 
 interface MenuItem {
-  id: string;
-  name: string;
-  children?: MenuItem[];
-  isExpanded?: boolean;
+  id: string
+  name: string
+  children?: MenuItem[]
+  isExpanded?: boolean
 }
 
 export function MenuSystem() {
-  const router = useRouter();
-  const {
-    menuData,
-    selectedItem,
-    isLoading,
-    error,
-    initializeMenu,
-    expandAll,
-    collapseAll,
-    selectComboboxItem,
-  } = useMenuStore();
+  const router = useRouter()
+  const { menuData, selectedItem, isLoading, error, initializeMenu, expandAll,
+     collapseAll, selectComboboxItem,isExpanded,setIsExpanded } =
+    useMenuStore()
 
   useEffect(() => {
-    initializeMenu();
-  }, [initializeMenu]);
+    initializeMenu()
+  }, [initializeMenu])
 
-  const handleNavigate = (item: MenuItem) => {
-    // const slug = generateSlug(item.name);
-    // router.push(`/${slug}`);
-  };
+  const handleExpandCollapse = () => {
+    if (isExpanded) {
+      collapseAll()
+    } else {
+      expandAll()
+    }
+    setIsExpanded(!isExpanded)
+  }
 
   if (isLoading) {
-    return <div className="p-6">Loading...</div>;
+    return <div className="p-6">Loading...</div>
   }
 
   if (error) {
-    return <div className="p-6 text-red-600">{error}</div>;
+    return <div className="p-6 text-red-600">{error}</div>
   }
 
   if (!menuData) {
-    return <div className="p-6">No menu data available</div>;
+    return <div className="p-6">No menu data available</div>
   }
 
   return (
@@ -61,29 +57,23 @@ export function MenuSystem() {
       </div>
 
       <div className="mb-4">
-        <Combobox
-          data={menuData}
-          onSelect={selectComboboxItem}
-          selectedItem={selectedItem}
-        />
+          <Combobox data={menuData} onSelect={(item) => { selectComboboxItem(item); expandAll();handleExpandCollapse() }} selectedItem={selectedItem} />
+
       </div>
 
-      <div className="mb-6 flex gap-2">
+      <div className="mb-6">
         <Button
-          variant="secondary"
-          className="bg-[#14161F] text-white hover:bg-[#14161F]/90"
-          onClick={expandAll}
+          variant={isExpanded ? "outline" : "secondary"}
+          className={isExpanded ? "" : "bg-[#14161F] text-white hover:bg-[#14161F]/90"}
+          onClick={handleExpandCollapse}
         >
-          Expand All
-        </Button>
-        <Button variant="outline" onClick={collapseAll}>
-          Collapse All
+          {isExpanded ? "Collapse All" : "Expand All"}
         </Button>
       </div>
 
       <div className="grid gap-8 lg:grid-cols-[1fr,300px]">
         <div className="space-y-2">
-          <MenuTreeItem item={menuData} onNavigate={handleNavigate} />
+          <MenuTreeItem item={menuData} />
         </div>
       </div>
 
@@ -92,5 +82,6 @@ export function MenuSystem() {
       <EditDialog />
       <DeleteDialog />
     </div>
-  );
+  )
 }
+

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ResponseData } from "@/types/menu";
 import axiosInstance from "@/axiosInterceptor";
-import axios from "axios";
 
 export async function GET(request: NextRequest) {
   try {

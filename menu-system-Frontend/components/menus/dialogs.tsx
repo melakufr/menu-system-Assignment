@@ -18,18 +18,25 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useMenuStore } from "@/lib/store";
+import { findItemById, findParentItem, useMenuStore } from "@/lib/store";
 
 export const AddDialog = () => {
-    const {
-        menuData,
-        isAddingItem,
-        newItemName,
-        setIsAddingItem,
-        setNewItemName,
-        addNewItem,
-      } = useMenuStore()
+  const {
+    menuData,
+    isAddingItem,
+    newItemName,
+    setIsAddingItem,
+    setNewItemName,
+    addNewItem,
+    selectedParentId,
+  } = useMenuStore();
 
+  const currentItem = selectedParentId
+    ? findItemById(menuData, selectedParentId)
+    : menuData;
+  const parentItemName = selectedParentId
+    ? findParentItem(menuData, selectedParentId)
+    : null;
   return (
     <>
       <Dialog open={isAddingItem} onOpenChange={setIsAddingItem}>
@@ -39,9 +46,15 @@ export const AddDialog = () => {
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <Label>Parent Item</Label>
+              <Label>Parent Data</Label>
               <div className="rounded-md bg-gray-50 p-2 text-sm">
-                {menuData?.name}
+                {parentItemName?.name}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Current Item</Label>
+              <div className="rounded-md bg-gray-50 p-2 text-sm">
+                {currentItem?.name}
               </div>
             </div>
             <div className="space-y-2">
@@ -57,7 +70,7 @@ export const AddDialog = () => {
             <Button variant="outline" onClick={() => setIsAddingItem(false)}>
               Cancel
             </Button>
-            <Button onClick={async()=> await addNewItem()}>Save</Button>
+            <Button onClick={async () => await addNewItem()}>Save</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -66,18 +79,11 @@ export const AddDialog = () => {
 };
 
 export const EditDialog = () => {
-    const {        
-        newItemName,
-        setIsEditing,isEdit,
-        setNewItemName,
-        updateItem,
-      } = useMenuStore()
+  const { newItemName, setIsEditing, isEdit, setNewItemName, updateItem } =
+    useMenuStore();
   return (
     <>
-      <Dialog
-        open={isEdit}
-        onOpenChange={setIsEditing}
-      >
+      <Dialog open={isEdit} onOpenChange={setIsEditing}>
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Edit Menu Item</DialogTitle>
@@ -96,7 +102,7 @@ export const EditDialog = () => {
             <Button variant="outline" onClick={() => setIsEditing(false)}>
               Cancel
             </Button>
-            <Button onClick={async()=> await updateItem()}>Save</Button>
+            <Button onClick={async () => await updateItem()}>Save</Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -105,11 +111,7 @@ export const EditDialog = () => {
 };
 
 export const DeleteDialog = () => {
-    const {
-        itemToDelete,
-        setItemToDelete,
-        deleteItem,
-      } = useMenuStore()
+  const { itemToDelete, setItemToDelete, deleteItem } = useMenuStore();
   return (
     <>
       <AlertDialog
